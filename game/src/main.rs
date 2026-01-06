@@ -4,6 +4,7 @@
 mod anfield;
 mod piece;
 mod player;
+mod strategy;
 
 use std::io::{self, BufRead};
 use anfield::Anfield;
@@ -66,7 +67,7 @@ fn main() {
                     let my_chars = [my_char, my_terr];
                     let enemy_chars = [enemy_char, enemy_terr];
                     
-                    let (x, y) = solve(a, &piece, &my_chars, &enemy_chars);
+                    let (x, y) = strategy::solve_heatmap(a, &piece, &my_chars, &enemy_chars);
                     println!("{} {}", x, y);
                 }
             }
@@ -74,17 +75,3 @@ fn main() {
     }
 }
 
-fn solve(anfield: &Anfield, piece: &Piece, my_chars: &[char], enemy_chars: &[char]) -> (i32, i32) {
-    // Simple strategy: First valid move
-    // Iterate through all possible positions on the board
-    for y in 0..anfield.height as i32 {
-        for x in 0..anfield.width as i32 {
-            // Check if we can place the piece here
-            if anfield.can_place(piece, x, y, my_chars, enemy_chars) {
-                return (x, y);
-            }
-        }
-    }
-    // If no valid move is found, return 0 0 (surrender/invalid)
-    (0, 0)
-}
